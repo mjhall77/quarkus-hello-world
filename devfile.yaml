@@ -1,49 +1,37 @@
 schemaVersion: 2.2.0
 metadata:
-  name: quarkus-continue-env
-  version: 1.0.0
-  description: Quarkus development environment.
-  tags: ["Java", "Quarkus", "Maven"]
-
+  name: quarkus-hello-world
 components:
-  - name: quarkus-dev
+  # 1. The main development container
+  - name: dev-tools
     container:
       image: quay.io/devfile/universal-developer-image:ubi8-latest
-      memoryLimit: 4G
-      memoryRequest: 2G
+      memoryRequest: 1G
+      memoryLimit: 2G
       mountSources: true
       endpoints:
-        - name: http-quarkus
+        - name: quarkus-web
           targetPort: 8080
           exposure: public
-        - name: debug
-          targetPort: 5005
-          exposure: none
+
+  # 2. The Continue AI Code Assistant Plugin
+  - name: continue-ai
+    plugin:
+      id: Continue/continue/1.3.28
+      registryUrl: https://open-vsx.org
 
 commands:
-  - id: build
+  # 3. The command to run your Quarkus app
+  - id: start-app
     exec:
-      component: quarkus-dev
-      commandLine: mvn compile quarkus:dev -Dquarkus.http.host=0.0.0.0
+      component: dev-tools
       workingDir: ${PROJECT_SOURCE}
-      group:
-        kind: build
-        isDefault: true
-
-  - id: run-dev
-    exec:
-      component: quarkus-dev
-      commandLine: mvn compile quarkus:dev
-      workingDir: ${PROJECT_SOURCE}
+      commandLine: ./mvnw compile quarkus:dev
       group:
         kind: run
         isDefault: true
 
-  - id: debug
-    exec:
-      component: quarkus-dev
-      commandLine: mvn compile quarkus:dev -Dsuspend
-      workingDir: ${PROJECT_SOURCE}
-      group:
-        kind: debug
-        isDefault: true
+events:
+  # 4. Automating the launch
+  postStart:
+    - start-app
