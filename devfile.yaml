@@ -2,11 +2,10 @@ schemaVersion: 2.2.0
 metadata:
   name: quarkus-continue-env
   version: 1.0.0
-  description: Quarkus development environment equipped with the Continue AI assistant.
-  tags: ["Java", "Quarkus", "Maven", "AI"]
+  description: Quarkus development environment.
+  tags: ["Java", "Quarkus", "Maven"]
 
 components:
-  # The main container where your Quarkus app will build and run
   - name: quarkus-dev
     container:
       image: quay.io/devfile/universal-developer-image:ubi8-latest
@@ -14,23 +13,14 @@ components:
       memoryRequest: 2G
       mountSources: true
       endpoints:
-        # Exposes the default Quarkus HTTP port
         - name: http-quarkus
           targetPort: 8080
           exposure: public
-        # Exposes the default Quarkus debug port
         - name: debug
           targetPort: 5005
           exposure: none
 
-  # The Continue AI extension pulled from the Open VSX registry
-  - name: continue-ai
-    plugin:
-      id: Continue.continue
-      registryUrl: https://open-vsx.org
-
 commands:
-  # Standard Maven build command
   - id: build
     exec:
       component: quarkus-dev
@@ -40,7 +30,6 @@ commands:
         kind: build
         isDefault: true
 
-  # Starts Quarkus in development mode (hot reload)
   - id: run-dev
     exec:
       component: quarkus-dev
@@ -50,7 +39,6 @@ commands:
         kind: run
         isDefault: true
 
-  # Starts Quarkus in dev mode with the debugger suspended, waiting for attachment
   - id: debug
     exec:
       component: quarkus-dev
