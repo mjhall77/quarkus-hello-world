@@ -24,7 +24,7 @@ commands:
   - id: build
     exec:
       component: quarkus-dev
-      commandLine: mvn clean package -DskipTests
+      commandLine: mvn compile quarkus:dev -Dquarkus.http.host=0.0.0.0
       workingDir: ${PROJECT_SOURCE}
       group:
         kind: build
