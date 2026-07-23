@@ -28,8 +28,8 @@ commands:
   - id: start-app
     exec:
       component: dev-tools
-      workingDir: ${PROJECT_SOURCE}
-      commandLine: ./mvnw compile quarkus:dev
+      workingDir: ${PROJECT_SOURCE}/hello-world
+      commandLine: mvnw compile quarkus:dev
       group:
         kind: run
         isDefault: true
